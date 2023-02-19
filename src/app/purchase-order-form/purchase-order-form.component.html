@@ -1,0 +1,142 @@
+
+<div class="container">
+    <form [formGroup]="form">
+        <hr>
+        <div class="orderHeading">
+            CREATE PURCHASE ORDER
+            <div class="buttonDiv" >
+                <p-button
+                style="color: #31a870;"
+                styleClass="p-button
+                 p-mr-2"
+                [label]="'Save'"
+               
+                (click)="saveForm()"
+              ></p-button>
+                <p-button
+                styleClass="p-button-primary p-mr-2"
+                [label]="'Confirm Order'"
+                [disabled]="form.invalid"
+                (click)="onSubmit()"
+              ></p-button>
+            </div>
+        </div>
+        <hr>
+        <div class="orderDetails">
+            <div class="vendorDiv">
+                <label for="">Vendor<span style="color:red"> *</span></label>
+               
+                <mat-form-field appearance="fill">
+                    
+                    <mat-label><mat-icon >person_add</mat-icon>Select vendor</mat-label>
+                   
+                    <mat-select formControlName="vendor">
+                       <mat-option value="{{vendor}}"
+                            *ngFor="let vendor of vendors">{{vendor}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="orderId">
+                <label for="">Order Number<span style="color:red"> *</span></label>
+                <mat-form-field appearance="fill">
+                    <input matInput value="{{orderDetails.poNo}}" disabled>
+                </mat-form-field>
+            </div>
+            <div class="orderDate">
+                <label for="">Order Date<span style="color:red"> *</span></label>
+                <mat-form-field appearance="fill">
+                    <input matInput value="{{orderDetails.poDate|date}}" disabled>
+                </mat-form-field>
+            </div>
+            <div class="inventory">
+                <label for="">Inventory Location<span style="color:red"> *</span></label>
+               
+                <mat-form-field appearance="fill">
+                    <mat-label> <mat-icon> location_on</mat-icon>Inventory</mat-label>
+                    <textarea rows="1" matInput formControlName="location"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="itemHeading">
+            ITEM DETAILS
+            <hr>
+        </div>
+        <table class="newTable">
+            <div formArrayName="items">
+                <tr>
+                    <th>PRODUCT<span style="color:red"> *</span></th>
+                    <th>QUANTITY<span style="color:red"> *</span></th>
+                    <th>AMOUNT<span style="color:red"> *</span></th>
+                    <th>DISCOUNT[%]</th>
+                    <th>TAX[5%]</th>
+                    <th>TOTAL</th>
+                    <th></th>
+                </tr>
+
+                <tr *ngFor="let item of item_details.controls; let itemIndex=index" [formGroupName]="itemIndex">
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Select product</mat-label>
+                            <mat-select formControlName="productName">
+                                <mat-option value="{{product}}"
+                                    *ngFor="let product of orderDetails.products let last = last">{{product}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td>
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter quantity</mat-label>
+                            <input matInput formControlName="quantity">
+                        </mat-form-field>
+
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter amount</mat-label>
+                            <input matInput formControlName="amount">
+                        </mat-form-field>
+
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter discount</mat-label>
+                            <input matInput formControlName="discount">
+                        </mat-form-field>
+
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Tax</mat-label>
+                            <input matInput  
+                                value="{{item_details.controls[itemIndex].value.quantity*item_details.controls[itemIndex].value.amount*0.05 | number : '1.2-2'}}">
+                            <!-- <input matInput 
+                            formControlName="tax"> -->
+                        </mat-form-field>
+
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Total</mat-label>
+                            <!-- <input matInput formControlName="total"
+                               > -->
+                            <input matInput 
+                                value="{{item_details.controls[itemIndex].value.quantity*item_details.controls[itemIndex].value.amount*(1-(0.01*item_details.controls[itemIndex].value.discount))*1.05 | number : '1.2-2'}}">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                       
+                            <button  type="button"
+                            (click)="deleteSellingPoint(itemIndex)" mat-raised-button color="warn" style="margin: 10px;">Delete</button>
+                           
+                    </td>
+                </tr>
+                <button  type="button"
+                            (click)="addSellingPoint()" mat-raised-button color="primary">Add</button>
+               
+            </div>
+        </table>
+
+    </form>
+</div>
